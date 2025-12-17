@@ -45,9 +45,7 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app needs access to photo library to select audio files</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>This app needs access to microphone for audio playback</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>This app needs access to select and play audio files from your device</string>
 </dict>
 </plist>

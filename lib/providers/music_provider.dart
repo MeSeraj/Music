@@ -50,12 +50,23 @@ class MusicProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeSong(int index) {
+  Future<void> removeSong(int index) async {
     if (index >= 0 && index < _playlist.length) {
+      // If removing the currently playing song, stop playback
+      if (index == _currentIndex) {
+        await stop();
+      }
+      
       _playlist.removeAt(index);
+      
+      // Adjust current index if needed
       if (_currentIndex >= _playlist.length) {
         _currentIndex = _playlist.isEmpty ? 0 : _playlist.length - 1;
+      } else if (index < _currentIndex) {
+        // If we removed a song before the current one, adjust the index
+        _currentIndex--;
       }
+      
       notifyListeners();
     }
   }
