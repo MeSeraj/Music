@@ -4,6 +4,7 @@ import 'screens/home_screen.dart';
 import 'providers/music_provider.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 

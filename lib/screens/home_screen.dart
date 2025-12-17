@@ -9,24 +9,48 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   Future<void> _pickAudioFiles(BuildContext context) async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.audio,
-      allowMultiple: true,
-    );
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.audio,
+        allowMultiple: true,
+      );
 
-    if (result != null && context.mounted) {
-      final provider = Provider.of<MusicProvider>(context, listen: false);
-      for (var file in result.files) {
-        if (file.path != null) {
-          final song = Song(
-            id: DateTime.now().millisecondsSinceEpoch.toString(),
-            title: file.name.replaceAll(RegExp(r'\.[^\.]+$'), ''),
-            artist: 'Unknown Artist',
-            filePath: file.path!,
-            duration: Duration.zero,
-          );
-          provider.addSong(song);
+      if (result != null && context.mounted) {
+        final provider = Provider.of<MusicProvider>(context, listen: false);
+        int addedCount = 0;
+        
+        for (var file in result.files) {
+          if (file.path != null) {
+            final song = Song(
+              id: DateTime.now().millisecondsSinceEpoch.toString(),
+              title: file.name.replaceAll(RegExp(r'\.[^\.]+$'), ''),
+              artist: 'Unknown Artist',
+              filePath: file.path!,
+              duration: Duration.zero,
+            );
+            provider.addSong(song);
+            addedCount++;
+          }
         }
+        
+        if (context.mounted && addedCount > 0) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Added $addedCount song${addedCount > 1 ? 's' : ''}'),
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error adding songs: ${e.toString()}'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
       }
     }
   }
@@ -108,12 +132,46 @@ class HomeScreen extends StatelessWidget {
                         subtitle: Text(song.artist),
                         trailing: IconButton(
                           icon: const Icon(Icons.delete),
-                          onPressed: () {
-                            provider.removeSong(index);
+                          onPressed: () async {
+                            final confirmed = await showDialog<bool>(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('Remove Song'),
+                                content: Text(
+                                  'Remove "${song.title}" from playlist?',
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context, false),
+                                    child: const Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context, true),
+                                    child: const Text('Remove'),
+                                  ),
+                                ],
+                              ),
+                            );
+                            
+                            if (confirmed == true) {
+                              await provider.removeSong(index);
+                            }
                           },
                         ),
-                        onTap: () {
-                          provider.playSong(index);
+                        onTap: () async {
+                          try {
+                            await provider.playSong(index);
+                          } catch (e) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Cannot play this song: ${e.toString()}'),
+                                  backgroundColor: Colors.red,
+                                  duration: const Duration(seconds: 3),
+                                ),
+                              );
+                            }
+                          }
                         },
                       ),
                     );
@@ -136,7 +194,7 @@ class HomeScreen extends StatelessWidget {
                       color: Theme.of(context).colorScheme.surface,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.3),
+                          color: Colors.black.withValues(alpha: 0.3),
                           blurRadius: 10,
                           offset: const Offset(0, -2),
                         ),

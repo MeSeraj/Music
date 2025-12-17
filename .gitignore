@@ -42,3 +42,94 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+android/local.properties
+
+# Android Gradle
+android/.gradle/
+android/.gradletasknamecache
+android/app/*.apk
+android/app/*.ap_
+android/app/*.dex
+android/captures/
+android/app/google-services.json
+android/key.properties
+*.jks
+*.keystore
+
+# iOS
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/App.framework
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Runner.xcworkspace/
+ios/.generated/
+ios/Flutter/flutter_export_environment.sh
+*.xcworkspace
+
+# Build outputs
+*.apk
+*.aab
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Web
+web/firebase-config.js
+
+# Windows
+windows/flutter/ephemeral/
+windows/flutter/generated_plugin_registrant.cc
+windows/flutter/generated_plugin_registrant.h
+windows/flutter/generated_plugins.cmake
+
+# Linux
+linux/flutter/ephemeral/
+linux/flutter/generated_plugin_registrant.cc
+linux/flutter/generated_plugin_registrant.h
+linux/flutter/generated_plugins.cmake
+
+# macOS
+macos/Flutter/ephemeral/
+macos/Flutter/GeneratedPluginRegistrant.swift
+
+# Coverage
+coverage/
+test/.test_coverage.dart
+*.lcov
+
+# Exceptions - Files to keep
+!**/ios/**/Flutter/AppFrameworkInfo.plist
+
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.p12
+
+# IDE
+.vscode/
+.fleet/
+*.code-workspace
+
+# Generated files
+*.g.dart
+*.freezed.dart
+*.gr.dart
+*.config.dart
+*.mocks.dart
+
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
+firestore.rules
+database.rules.json
+
+# Other
+.fvm/
+.metadata
+*.lock
+node_modules/
+pubspec.lock

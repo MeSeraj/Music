@@ -43,7 +43,7 @@ class PlayerScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
+                        color: Colors.black.withValues(alpha: 0.3),
                         blurRadius: 20,
                         offset: const Offset(0, 10),
                       ),
@@ -92,12 +92,18 @@ class PlayerScreen extends StatelessWidget {
                         ),
                       ),
                       child: Slider(
-                        value: provider.currentPosition.inSeconds.toDouble(),
+                        value: provider.totalDuration.inSeconds > 0
+                            ? provider.currentPosition.inSeconds
+                                .toDouble()
+                                .clamp(0.0, provider.totalDuration.inSeconds.toDouble())
+                            : 0.0,
                         max: provider.totalDuration.inSeconds.toDouble() > 0
                             ? provider.totalDuration.inSeconds.toDouble()
                             : 1.0,
                         onChanged: (value) {
-                          provider.seekTo(Duration(seconds: value.toInt()));
+                          if (provider.totalDuration.inSeconds > 0) {
+                            provider.seekTo(Duration(seconds: value.toInt()));
+                          }
                         },
                       ),
                     ),
